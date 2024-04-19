@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UEPluginPackager": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\scratch\\TestUEPlugin\\GradientspaceUEToolbox"
+    }
+  }
+}
