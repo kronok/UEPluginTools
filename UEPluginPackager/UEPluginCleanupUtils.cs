@@ -9,14 +9,16 @@ namespace UEPluginPackager
 {
     internal class UEPluginCleanupUtils
     {
-        public static void UpdateBuildCSFiles(string PluginRootPath)
+        public static int UpdateBuildCSFiles(string PluginRootPath)
         {
             string[] BuildFiles = Directory.GetFiles(PluginRootPath, "*.build.cs", SearchOption.AllDirectories);
+            int NumUpdated = 0;
 
             foreach (string BuildFilePath in BuildFiles)
             {
-                Console.WriteLine("  Processing " + BuildFilePath);
+                Console.WriteLine("      Processing " + BuildFilePath);
 
+                bool bFoundPluginToolLine = false;
                 string[] Lines = File.ReadAllLines(BuildFilePath);
                 int NumLines = Lines.Length;
                 for (int li = 0; li < NumLines; li++)
@@ -24,11 +26,22 @@ namespace UEPluginPackager
                     if (Lines[li].Contains("//#UEPLUGINTOOL"))
                     {
                         Lines[li] = Lines[li].Replace("//#UEPLUGINTOOL", "bUsePrecompiled=true;");
+                        bFoundPluginToolLine = true;
                     }
                 }
 
                 File.WriteAllLines(BuildFilePath, Lines);
+
+                if (!bFoundPluginToolLine)
+                {
+                    Console.WriteLine("        *** Did not find //#UEPLUGINTOOL token!!");
+                }
+                else
+                {
+                    NumUpdated++;
+                }
             }
+            return NumUpdated;
         }
 
 
@@ -69,6 +82,17 @@ namespace UEPluginPackager
         {
             string BinariesPath = Path.Combine(PluginRootPath, "Binaries");
             string[] PDBFiles = Directory.GetFiles(PluginRootPath, "*.pdb", SearchOption.AllDirectories);
+            foreach (string PDBFile in PDBFiles)
+            {
+                File.Delete(PDBFile);
+            }
+        }
+
+
+        public static void DeletePatchFiles(string PluginRootPath)
+        {
+            string BinariesPath = Path.Combine(PluginRootPath, "Binaries");
+            string[] PDBFiles = Directory.GetFiles(PluginRootPath, "*.patch_*.*", SearchOption.AllDirectories);
             foreach (string PDBFile in PDBFiles)
             {
                 File.Delete(PDBFile);
