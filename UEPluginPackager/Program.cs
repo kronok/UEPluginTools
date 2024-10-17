@@ -93,7 +93,7 @@ if (File.Exists(VersionNumberFilePath))
     }
     catch
     {
-        Console.WriteLine("!!WARNING!! version string in file " + VersionNumberFilePath + " is malformed: [" + VersionText + "] - should be informat Major.Minor.Patch. Ignoring...");
+        Console.WriteLine("!!WARNING!! version string in file " + VersionNumberFilePath + " is malformed: [" + VersionText + "] - should be in format Major.Minor.Patch. Ignoring...");
     }
 }
 else
@@ -101,24 +101,48 @@ else
     Console.WriteLine("!!WARNING!! no version file exist at " + VersionNumberFilePath + ", using default version");
 }
 
+// read Unreal version number file
+// this file should be in <PluginName>/Source/GS_UNREAL_VERSION.txt
+string UnrealVersion = "0.0";
+string UnrealVersionFilePath = Path.Combine(PluginRootPath, "Source", "GS_UNREAL_VERSION.txt");
+if (File.Exists(UnrealVersionFilePath))
+{
+    string FileText = File.ReadAllText(UnrealVersionFilePath);
+    string[] VersionTokens = FileText.Split('.');
+    try
+    {
+        if (VersionTokens.Length == 2)
+            UnrealVersion = int.Parse(VersionTokens[0]).ToString() + '.' + int.Parse(VersionTokens[1]).ToString();
+        else if (VersionTokens.Length == 2)
+            UnrealVersion = int.Parse(VersionTokens[0]).ToString() + '.' + int.Parse(VersionTokens[1]).ToString() + '.' + int.Parse(VersionTokens[2]).ToString();
+    }
+    catch
+    {
+        Console.WriteLine("!!WARNING!! version string in file " + UnrealVersionFilePath + " is malformed: [" + FileText + "] - should be in format Major.Minor or Major.Minor.Patch Ignoring...");
+    }
+}
+else
+{
+    Console.WriteLine("!!WARNING!! no Unreal version file exist at " + UnrealVersionFilePath + ", using default version 0.0");
+}
+
 
 string PluginVersionSuffix = String.Format("_{0}_{1}_{2}", Version.MajorVersion, Version.MinorVersion, Version.PatchVersion);
 
 string PluginURL = "https://www.gradientspace.com/uetoolbox";
 string DownloadURLRoot = "https://dg1t4a32yvqmr.cloudfront.net/";
-string DownloadURL = DownloadURLRoot + PluginDirName + "/" + PluginDirName + PluginVersionSuffix + ".zip";
-
+string DownloadURL = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + ".zip";
 
 // construct PluginVersionInfo struct that will be converted to JSON and saved both
 // inside the plugin at <PluginName>/GS_VERSION_INFO.txt and in ..\<PluginName>_VERSION.txt.
 
 PluginVersionInfo PluginVersionInfo = new PluginVersionInfo(PluginDirName, PluginURL);
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.WindowsPlatform, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.WindowsPlatform, UnrealVersion, Version, DownloadURL));
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, UnrealVersion, Version, DownloadURL));
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, UnrealVersion, Version, DownloadURL));
 string VersionJSON = UEPluginVersionUtils.VersionSetToJSON(PluginVersionInfo);
 
 

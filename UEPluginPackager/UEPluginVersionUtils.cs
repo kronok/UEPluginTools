@@ -25,19 +25,22 @@ namespace UEPluginPackager
     public struct PlatformVersionInfo
     {
         public string Platform { get; set; }
+        public string UnrealVersion { get; set; }
         public PluginVersionNumber Version { get; set; }
         public string DownloadURL { get; set; }
 
         public PlatformVersionInfo()
         {
             Platform = WindowsPlatform;
+            UnrealVersion = "0.0";
             Version = new PluginVersionNumber();
             DownloadURL = "https://gradientspace.com";
         }
 
-        public PlatformVersionInfo(string PlatformString, PluginVersionNumber VersionNum, string DownloadURLString)
+        public PlatformVersionInfo(string PlatformString, string UnrealVersionString, PluginVersionNumber VersionNum, string DownloadURLString)
         {
             Platform = PlatformString;
+            UnrealVersion = UnrealVersionString;
             Version = VersionNum;
             DownloadURL = DownloadURLString;
         }
