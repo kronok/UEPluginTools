@@ -163,6 +163,10 @@ if ( File.Exists(ZipFilePath) )
 Console.WriteLine("  ...Creating zip archive " + ZipFilePath + "...");
 ZipFile.CreateFromDirectory(PluginRootPath, ZipFilePath);
 
-// create new version info file at path <PluginName>/../<PluginName>_VERSION.txt
-string ZipFileVersionPath = Path.Combine(BaseDirPath, PluginDirName + "_VERSION.txt");
+// create new version info file at paths:
+//   <PluginName>/../<PluginName>_CURRENTVERSION.txt
+//   <PluginName>/../<PluginName>_<Major>_<Minor>_<Patch>.txt
+string ZipFileVersionPath = Path.Combine(BaseDirPath, PluginDirName + PluginVersionSuffix + ".txt");
 File.WriteAllText(ZipFileVersionPath, VersionJSON);
+string CurrentVersionPath = Path.Combine(BaseDirPath, PluginDirName + "_CURRENTVERSION.txt");
+File.WriteAllText(CurrentVersionPath, VersionJSON);
