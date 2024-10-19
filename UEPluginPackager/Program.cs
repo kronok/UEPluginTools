@@ -128,21 +128,26 @@ else
 
 
 string PluginVersionSuffix = String.Format("_{0}_{1}_{2}", Version.MajorVersion, Version.MinorVersion, Version.PatchVersion);
+string Win64PlatformSuffix = "_Win64";
+string LinuxPlatformSuffix = "_Linux";
+string OSXPlatformSuffix = "_OSX";
 
 string PluginURL = "https://www.gradientspace.com/uetoolbox";
 string DownloadURLRoot = "https://dg1t4a32yvqmr.cloudfront.net/";
-string DownloadURL = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + ".zip";
+string DownloadURL_Win64 = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + Win64PlatformSuffix + ".zip";
+string DownloadURL_Linux = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + LinuxPlatformSuffix + ".zip";
+string DownloadURL_OSX = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + OSXPlatformSuffix + ".zip";
 
 // construct PluginVersionInfo struct that will be converted to JSON and saved both
 // inside the plugin at <PluginName>/GS_VERSION_INFO.txt and in ..\<PluginName>_VERSION.txt.
 
 PluginVersionInfo PluginVersionInfo = new PluginVersionInfo(PluginDirName, PluginURL);
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.WindowsPlatform, UnrealVersion, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.WindowsPlatform, UnrealVersion, Version, DownloadURL_Win64));
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, UnrealVersion, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, UnrealVersion, Version, DownloadURL_Linux));
 PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, UnrealVersion, Version, DownloadURL));
+    new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, UnrealVersion, Version, DownloadURL_OSX));
 string VersionJSON = UEPluginVersionUtils.VersionSetToJSON(PluginVersionInfo);
 
 
@@ -150,7 +155,7 @@ string VersionFilePath = Path.Combine(PluginRootPath, "GS_VERSION_INFO.txt");
 File.WriteAllText(VersionFilePath, VersionJSON);
 
 string BaseDirPath = Path.Combine(PluginRootPath, "..");
-string ZipFilePath = Path.Combine(BaseDirPath, PluginDirName + PluginVersionSuffix + ".zip");
+string ZipFilePath = Path.Combine(BaseDirPath, PluginDirName + PluginVersionSuffix + Win64PlatformSuffix + ".zip");
 
 // delete existing zip file
 if ( File.Exists(ZipFilePath) )
