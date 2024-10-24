@@ -45,6 +45,45 @@ namespace UEPluginPackager
         }
 
 
+        public static void UpdateUPluginFile(string PluginRootPath, bool bAddEnabledByDefault)
+        {
+            string[] PluginFiles = Directory.GetFiles(PluginRootPath, "*.uplugin");
+            foreach (string PluginFile in PluginFiles)
+            {
+                Console.WriteLine("      Processing " + PluginFile);
+
+                string[] LinesArray = File.ReadAllLines(PluginFile);
+                List<string> Lines = LinesArray.ToList();
+                bool bModifiedLines = false;
+
+                int InstalledLineIndex = -1;
+                int EnabledByDefaultLineIndex = -1;
+                int ModulesLineIndex = -1;
+                for ( int i = 0; i < Lines.Count; i++) {
+                    if (Lines[i].Contains("\"Installed\":") ) {
+                        InstalledLineIndex = i;
+                    }
+                    else if (Lines[i].Contains("\"EnabledByDefault\":") ) {
+                        EnabledByDefaultLineIndex = i;
+                    }
+                    else if (Lines[i].Contains("\"Modules\":") ) {
+                        ModulesLineIndex = i;
+                    }
+                }
+
+                if ( bAddEnabledByDefault && EnabledByDefaultLineIndex == -1 )
+                {
+                    if (ModulesLineIndex != -1 ) {
+                        Lines.Insert(ModulesLineIndex-1, "\t\"EnabledByDefault\": true,");
+                        bModifiedLines = true;
+                    }
+                }
+
+                if (bModifiedLines)
+                    File.WriteAllLines(PluginFile, Lines);
+            }
+        }
+
 
         public static void DeleteSourceFiles(string PluginRootPath, bool bPrivate, bool bPublic)
         {
@@ -100,9 +139,14 @@ namespace UEPluginPackager
         }
 
 
-        public static void DeleteIntermediateFiles(string PluginRootPath)
+        public static void DeleteIntermediateFiles(string PluginRootPath, bool bDeleteDevelopment, bool bDeleteShipping)
         {
-            // todo...
+            string IntermediatePath = Path.Combine(PluginRootPath, "Intermediate");
+            foreach ( string ShippingDir in Directory.EnumerateDirectories(PluginRootPath, "Shipping", SearchOption.AllDirectories) )
+            {
+                Console.WriteLine("    Deleting " + ShippingDir);
+                Directory.Delete(ShippingDir, true);
+            }
         }
     }
 }

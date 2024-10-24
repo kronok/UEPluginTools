@@ -8,6 +8,16 @@ bool bDeletePublicSource = true;
 bool bDeletePDBFiles = true;
 bool bDeletePatchFiles = true;
 
+bool bDeleteDevelopment = false;
+bool bDeleteShipping = false;
+if (args.Contains("-NoShipping", StringComparer.OrdinalIgnoreCase))
+    bDeleteShipping = true;
+
+bool bEnableByDefault = false;
+if (args.Contains("-EnableByDefault", StringComparer.OrdinalIgnoreCase))
+    bEnableByDefault = true;
+
+
 //
 // TODO: currently this is desctructive....would be nice to copy everything to a temp folder and
 // work there...
@@ -35,6 +45,9 @@ if ( NumBuildFilesUpdated == 0 )
 {
     Console.WriteLine("!!WARNING!! no build.cs files were found to contain the //#UEPLUGINTOOL tag, plugin may not function correctly");
 }
+
+Console.WriteLine("  ...Updating uplugin files...");
+UEPluginPackager.UEPluginCleanupUtils.UpdateUPluginFile(PluginRootPath, bEnableByDefault);
 
 //
 // Remove Private and Public folders inside Source directories (but not build.cs files)
@@ -65,11 +78,11 @@ if ( bDeletePatchFiles )
     UEPluginPackager.UEPluginCleanupUtils.DeletePatchFiles(PluginRootPath);
 }
 
-//
-// Remove intermediate files (todo make this more specific)
-//
-//Console.WriteLine("Deleting Intermediate files...");
-//UEPluginPackager.UEPluginCleanupUtils.DeleteIntermediateFiles(PluginRootPath);
+if ( bDeleteDevelopment || bDeleteShipping )
+{
+    Console.WriteLine("  ...Deleting Intermediate Files...");
+    UEPluginPackager.UEPluginCleanupUtils.DeleteIntermediateFiles(PluginRootPath, bDeleteDevelopment, bDeleteShipping);
+}
 
 
 //
