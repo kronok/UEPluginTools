@@ -1,15 +1,19 @@
 This repository contains various small tools and build scripts that can help with creating and packaging binary builds of Unreal Engine Plugins.
+I use these tools to create binary versions of the [**Gradientspace UE Toolbox**](https://www.gradientspace.com/uetoolbox) plugin (try it! free!) 
 
 Currently only Win64 is really supported, mainly because Windows .bat files are used to script the binary build process.
 
 I strongly recommend you fork this project if you wish to use these build tools, as non-compatible changes are likely to be made in future.
+
+
+
 
 # UEPluginPackager
 
 Unreal Editor supports compiling a "Packaged" binary version of a Plugin, however the output is not actually shippable.
 The resulting folder needs various changes to make an installable binary plugin comparable to what you might download from Fab.
 UEPluginPackager is a command-line C# application that does this process, producing a zipped folder that can be distributed,
-as well as several "version" text files (which I use for auto-update checking functionality)
+as well as several "version" text files (which I use for auto-update checking functionality). 
 
 *Note: Currently this tool runs in-place, ie it is destructive, so it should be run on a copy of the build*
 
@@ -37,6 +41,8 @@ The UE version used to build the plugin can also be included, this is read from 
 Currently UEPluginPackager does not figure this out itself, you must create this text file (the binary-build scripts below do it automatically).
 The version number must be in Major.Minor format.
 
+If you would like to read in more detail about what the requirements are for creating a packaged plugin, I found
+[this article by AlgoSyntax to be highly informative](https://store.algosyntax.com/tutorials/unreal-engine/how-to-package-and-sell-binary-plugins-for-ue5/)
 
 # CopyrightChecker
 
