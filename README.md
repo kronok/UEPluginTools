@@ -1,10 +1,11 @@
 This repository contains various small tools and build scripts that can help with creating and packaging binary builds of Unreal Engine Plugins.
 I use these tools to create binary versions of the [**Gradientspace UE Toolbox**](https://www.gradientspace.com/uetoolbox) plugin (try it! free!) 
 
-Currently only Win64 is really supported, mainly because Windows .bat files are used to script the binary build process.
+Currently only Win64 is really supported, mainly because Windows .bat files are used to script the binary build process. In addition, packaged
+UE binary plugins have various limitations. I describe these limits in detail on the [UEToolbox installation help page](https://www.gradientspace.com/uetoolbox-installation).
+Note that binary plugins *can* be used with a source build, but you have to jump through some hoops - again, see the UEToolbox install page for notes.
 
 I strongly recommend you fork this project if you wish to use these build tools, as non-compatible changes are likely to be made in future.
-
 
 
 
