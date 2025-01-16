@@ -75,6 +75,9 @@ be run to delete all temporary build outputs.
 If the script is successful, The */BUILDS/5p3* (etc) folders will be populated with (1) a PluginName_Version_Win64.zip file, (2) a PluginName_Version.txt file, and (3) a PluginName_CURRENTVERSION.txt file.
 The version number is taken from the file *<PluginName>/Source/GS_VERSION_NUMBER.txt*, via the UEPluginPackager tool (which is run as part of the build).
 
+In addition to the packaged build, a test project will be created at (eg) */build_5p3_test*, which will contain a sample project and the binary plugin, with .sln generated.
+You can open/build/run this project to test that the built plugin functions correctly with that UE version.
+
 Currently (Jan 2025) the scripts are set up to build the plugin 5.3, 5.4, and 5.5. Adding a version is a rote process but requires some effort.
 Disabling a version is straightforward, simply comment/delete the relevant line from build_all.bat and clean_all.bat.
 
