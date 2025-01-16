@@ -24,12 +24,16 @@
             List<string[]> FileSetsToProcess = new List<string[]>();
             FileSetsToProcess.Add(CppCodeFiles);
             FileSetsToProcess.Add(CppHeaderFiles);
+            FileSetsToProcess.Add(CsCodeFiles);
 
             foreach (string[] FileSet in FileSetsToProcess)
             {
                 foreach (string FilePath in FileSet)
                 {
                     string[] Lines = File.ReadAllLines(FilePath);
+                    if (Lines.Length <= 2)
+                        continue;
+
                     if (Lines[0].StartsWith(CopyrightString) == false)
                     {
                         if (bEnableAddIfMissing)
