@@ -17,8 +17,8 @@ namespace UEPluginPackager
         public PluginVersionNumber()
         {
             MajorVersion = 0;
-            MinorVersion = 1;
-            PatchVersion = 2;
+            MinorVersion = 0;
+            PatchVersion = 0;
         }
     }
 
@@ -34,7 +34,7 @@ namespace UEPluginPackager
             Platform = WindowsPlatform;
             UnrealVersion = "0.0";
             Version = new PluginVersionNumber();
-            DownloadURL = "https://gradientspace.com";
+            DownloadURL = "https://www.patreon.com/c/Kronok";
         }
 
         public PlatformVersionInfo(string PlatformString, string UnrealVersionString, PluginVersionNumber VersionNum, string DownloadURLString)
@@ -48,7 +48,7 @@ namespace UEPluginPackager
         static public string WindowsPlatform = "Windows";
         static public string LinuxPlatform = "Linux";
         static public string OSXPlatform = "OSX";
-        static public string DefaultURL = "https://gradientspace.com";
+        static public string DefaultURL = "https://www.patreon.com/c/Kronok";
     }
 
 
@@ -70,7 +70,7 @@ namespace UEPluginPackager
             ReleaseNotesURL = DefaultReleaseNotesURL;
         }
 
-        static public string DefaultReleaseNotesURL = "https://gradientspace.com";
+        static public string DefaultReleaseNotesURL = "https://www.patreon.com/c/Kronok";
     }
 
 
