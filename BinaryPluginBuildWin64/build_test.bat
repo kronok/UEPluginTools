@@ -8,10 +8,10 @@ call set_build_paths.bat %1
 
 rmdir /s /q %BUILD_TEST_PATH%
 xcopy %1 %BUILD_TEST_PATH%\ /E /R
-xcopy %BUILD_PACKAGE_PATH%\%GS_PLUGIN_NAME%  %BUILD_TEST_PATH%\Plugins\%GS_PLUGIN_NAME%\ /E /R
+xcopy %BUILD_PACKAGE_PATH%\%SCYTHE_PLUGIN_NAME%  %BUILD_TEST_PATH%\Plugins\%SCYTHE_PLUGIN_NAME%\ /E /R
 
 cd %BUILD_TEST_PATH%
-"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\UnrealVersionSelector.exe" /projectfiles %cd%\UEToolboxBuild%1.uproject
+"C:\Games\Epic Games\Launcher\Engine\Binaries\Win64\UnrealVersionSelector.exe" /projectfiles %cd%\UEToolboxBuild%1.uproject
 cd ..
 
 goto :eof

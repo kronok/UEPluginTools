@@ -5,7 +5,7 @@ using UEPluginPackager;
 
 bool bDeletePrivateSource = true;
 bool bDeletePublicSource = true;
-bool bDeletePDBFiles = true;
+bool bDeletePDBFiles = false;
 bool bDeletePatchFiles = true;
 
 bool bDeleteDevelopment = false;
@@ -33,6 +33,7 @@ if (!Directory.Exists(PluginRootPath))
 string PluginDirName = new System.IO.DirectoryInfo(PluginRootPath).Name;
 
 Console.WriteLine("Packaging plugin " + PluginDirName + " in path " + PluginRootPath + "...");
+
 
 //
 // Update the ModuleName.build.cs files in the plugin source folders to
@@ -85,15 +86,17 @@ if ( bDeleteDevelopment || bDeleteShipping )
 }
 
 
+
+
 //
 // Create output zip archive and version-info text files
 //
 
 // read version number file
-// This file should be in <PluginName>/Source/GS_VERSION_NUMBER.txt
+// This file should be in <PluginName>/Source/SCYTHE_VERSION_NUMBER.txt
 
 PluginVersionNumber Version = new PluginVersionNumber();
-string VersionNumberFilePath = Path.Combine(PluginRootPath, "Source", "GS_VERSION_NUMBER.txt");
+string VersionNumberFilePath = Path.Combine(PluginRootPath, "Source", "SCYTHE_VERSION_NUMBER.txt");
 if (File.Exists(VersionNumberFilePath))
 {
     string VersionText = File.ReadAllText(VersionNumberFilePath);
@@ -115,9 +118,9 @@ else
 }
 
 // read Unreal version number file
-// this file should be in <PluginName>/Source/GS_UNREAL_VERSION.txt
+// this file should be in <PluginName>/Source/SCYTHE_UNREAL_VERSION.txt
 string UnrealVersion = "0.0";
-string UnrealVersionFilePath = Path.Combine(PluginRootPath, "Source", "GS_UNREAL_VERSION.txt");
+string UnrealVersionFilePath = Path.Combine(PluginRootPath, "Source", "SCYTHE_UNREAL_VERSION.txt");
 if (File.Exists(UnrealVersionFilePath))
 {
     string FileText = File.ReadAllText(UnrealVersionFilePath);
@@ -145,27 +148,28 @@ string Win64PlatformSuffix = "_Win64";
 string LinuxPlatformSuffix = "_Linux";
 string OSXPlatformSuffix = "_OSX";
 
-string PluginURL = "https://www.gradientspace.com/uetoolbox";
-string DownloadURLRoot = "https://dg1t4a32yvqmr.cloudfront.net/";
-string DownloadURL_Win64 = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + Win64PlatformSuffix + ".zip";
-string DownloadURL_Linux = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + LinuxPlatformSuffix + ".zip";
-string DownloadURL_OSX = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + OSXPlatformSuffix + ".zip";
+string PluginURL = "https://www.patreon.com/c/Kronok";
+string DownloadURLRoot = "";
+string DownloadURL_Win64 = "https://www.patreon.com/c/Kronok";
+// string DownloadURL_Linux = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + LinuxPlatformSuffix + ".zip";
+// string DownloadURL_OSX = DownloadURLRoot + PluginDirName + "/" + UnrealVersion + "/" + PluginDirName + PluginVersionSuffix + OSXPlatformSuffix + ".zip";
 
 // construct PluginVersionInfo struct that will be converted to JSON and saved both
-// inside the plugin at <PluginName>/GS_VERSION_INFO.txt and in ..\<PluginName>_VERSION.txt.
+// inside the plugin at <PluginName>/SCYTHE_VERSION_INFO.txt and in ..\<PluginName>_VERSION.txt.
 
 PluginVersionInfo PluginVersionInfo = new PluginVersionInfo(PluginDirName, PluginURL);
 PluginVersionInfo.Platforms.Add(
     new PlatformVersionInfo(PlatformVersionInfo.WindowsPlatform, UnrealVersion, Version, DownloadURL_Win64));
-PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, UnrealVersion, Version, DownloadURL_Linux));
-PluginVersionInfo.Platforms.Add(
-    new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, UnrealVersion, Version, DownloadURL_OSX));
+// PluginVersionInfo.Platforms.Add(
+//     new PlatformVersionInfo(PlatformVersionInfo.LinuxPlatform, UnrealVersion, Version, DownloadURL_Linux));
+// PluginVersionInfo.Platforms.Add(
+//     new PlatformVersionInfo(PlatformVersionInfo.OSXPlatform, UnrealVersion, Version, DownloadURL_OSX));
 string VersionJSON = UEPluginVersionUtils.VersionSetToJSON(PluginVersionInfo);
 
 
-string VersionFilePath = Path.Combine(PluginRootPath, "GS_VERSION_INFO.txt");
+string VersionFilePath = Path.Combine(PluginRootPath, "SCYTHE_VERSION_INFO.txt");
 File.WriteAllText(VersionFilePath, VersionJSON);
+
 
 string BaseDirPath = Path.Combine(PluginRootPath, "..");
 string ZipFilePath = Path.Combine(BaseDirPath, PluginDirName + PluginVersionSuffix + Win64PlatformSuffix + ".zip");
@@ -177,9 +181,18 @@ if ( File.Exists(ZipFilePath) )
     File.Delete(ZipFilePath);
 }
 
+// Copy LICENSE.txt and README.txt to the plugin root directory
+string licenseFilePath = Path.Combine(PluginRootPath, "LICENSE.txt");
+string readmeFilePath = Path.Combine(PluginRootPath, "README.txt");
+
+File.Copy(Path.Combine(PluginRootPath, "..", "..", "PluginSources", "LICENSE.txt"), licenseFilePath, true);
+File.Copy(Path.Combine(PluginRootPath, "..", "..", "PluginSources", "README.txt"), readmeFilePath, true);
+
+
+
 // create new zip file at path <PluginName>/../<PluginName>.zip
 Console.WriteLine("  ...Creating zip archive " + ZipFilePath + "...");
-ZipFile.CreateFromDirectory(PluginRootPath, ZipFilePath);
+ZipFile.CreateFromDirectory(PluginRootPath, ZipFilePath, CompressionLevel.Optimal, true);
 
 // create new version info file at paths:
 //   <PluginName>/../<PluginName>_CURRENTVERSION.txt

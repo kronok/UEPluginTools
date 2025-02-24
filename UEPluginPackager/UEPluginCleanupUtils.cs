@@ -88,29 +88,18 @@ namespace UEPluginPackager
         public static void DeleteSourceFiles(string PluginRootPath, bool bPrivate, bool bPublic)
         {
             string SourcePath = Path.Combine(PluginRootPath, "Source");
-            string[] ModuleFolders = Directory.GetDirectories(SourcePath);
-            foreach (string ModuleFolder in ModuleFolders)
+            if (Directory.Exists(SourcePath))
             {
-                Console.WriteLine("  Processing " + ModuleFolder);
+                Console.WriteLine("  Processing " + SourcePath);
 
-                if (bPrivate)
+                // Delete all .cpp and .h files in the Source directory and its subdirectories
+                string[] SourceFiles = Directory.GetFiles(SourcePath, "*.*", SearchOption.AllDirectories)
+                    .Where(file => file.EndsWith(".cpp") || file.EndsWith(".h"))
+                    .ToArray();
+                foreach (string SourceFile in SourceFiles)
                 {
-                    string PrivatePath = Path.Combine(ModuleFolder, "Private");
-                    if (Directory.Exists(PrivatePath))
-                    {
-                        Console.WriteLine("    Deleting " + PrivatePath);
-                        Directory.Delete(PrivatePath, true);
-                    }
-                }
-
-                if (bPublic)
-                {
-                    string PublicPath = Path.Combine(ModuleFolder, "Public");
-                    if (Directory.Exists(PublicPath))
-                    {
-                        Console.WriteLine("    Deleting " + PublicPath);
-                        Directory.Delete(PublicPath, true);
-                    }
+                    Console.WriteLine("    Deleting " + SourceFile);
+                    File.Delete(SourceFile);
                 }
             }
         }

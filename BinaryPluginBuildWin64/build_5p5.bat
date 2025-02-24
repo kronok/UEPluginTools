@@ -12,11 +12,14 @@ xcopy %USEVER% %BUILD_PROJECT_PATH%\ /E /R
 
 cd %BUILD_PROJECT_PATH%
 call fetch_plugin.bat
-echo %EngineVersion% > Plugins\%GS_PLUGIN_NAME%\Source\GS_UNREAL_VERSION.txt
-"C:\Program Files (x86)\Epic Games\Launcher\Engine\Binaries\Win64\UnrealVersionSelector.exe" /projectfiles %cd%\UEToolboxBuild%USEVER%.uproject
+echo %EngineVersion% > Plugins\%SCYTHE_PLUGIN_NAME%\Source\SCYTHE_UNREAL_VERSION.txt
+"C:\Games\Epic Games\Launcher\Engine\Binaries\Win64\UnrealVersionSelector.exe" /projectfiles %cd%\UEToolboxBuild%USEVER%.uproject
+
+echo "UE5p5Root:"
+echo %UE5P5ROOT%
 
 set PLUGINBUILDPATH=%cd%\..\%BUILD_PLUGIN_PATH%
-call %UE5P5ROOT%/Engine/Build/BatchFiles/RunUAT.bat BuildPlugin -plugin="%cd%\Plugins\%GS_PLUGIN_NAME%\%GS_PLUGIN_NAME%.uplugin" -package=%PLUGINBUILDPATH%
+call %UE5P5ROOT%/Engine/Build/BatchFiles/RunUAT.bat BuildPlugin -plugin="%cd%\Plugins\%SCYTHE_PLUGIN_NAME%\%SCYTHE_PLUGIN_NAME%.uplugin" -package=%PLUGINBUILDPATH%
 
 cd ..
 
